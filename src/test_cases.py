@@ -1,5 +1,5 @@
 import pytest
-from src.api_requests import (
+from api_requests import (
     get_popular_movies, 
     
 )
