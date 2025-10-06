@@ -17,3 +17,9 @@ def get_movie_details(movie_id):
     url = f"{BASE_URL}/movie/{movie_id}"
     params = {"api_key": API_KEY}
     return requests.get(url, params=params)
+
+def search_movie(query, page=1):
+    """Film keresése név alapján"""
+    url = f"{BASE_URL}/search/movie"
+    params = {"api_key": API_KEY, "query": query, "page": page}
+    return requests.get(url, params=params)
