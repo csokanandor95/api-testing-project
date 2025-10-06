@@ -23,3 +23,9 @@ def search_movie(query, page=1):
     url = f"{BASE_URL}/search/movie"
     params = {"api_key": API_KEY, "query": query, "page": page}
     return requests.get(url, params=params)
+
+def get_movie_genres():
+    """Filmműfajok listájának lekérdezése"""
+    url = f"{BASE_URL}/genre/movie/list"
+    params = {"api_key": API_KEY}
+    return requests.get(url, params=params)

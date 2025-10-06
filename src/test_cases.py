@@ -3,6 +3,7 @@ from api_requests import (
     get_popular_movies,
     get_movie_details,
     search_movie,
+    get_movie_genres,
 )
 
 # pozitív tesztek
@@ -30,3 +31,13 @@ def test_tc03_search_movie_valid_query():
     assert response.status_code == 200
     data = response.json()
     assert len(data["results"]) > 0
+
+def test_tc04_get_genres():
+    """TC04: Műfajok listájának lekérdezése"""
+    response = get_movie_genres()
+    assert response.status_code == 200
+    data = response.json()
+    assert "genres" in data
+    for genre in data["genres"]:
+        assert "id" in genre
+        assert "name" in genre
