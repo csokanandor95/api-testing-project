@@ -11,3 +11,9 @@ def get_popular_movies(page=1, language="en-US"):
     url = f"{BASE_URL}/movie/popular"
     params = {"api_key": API_KEY, "page": page, "language": language}
     return requests.get(url, params=params)
+
+def get_movie_details(movie_id):
+    """Film részletek lekérdezése ID alapján"""
+    url = f"{BASE_URL}/movie/{movie_id}"
+    params = {"api_key": API_KEY}
+    return requests.get(url, params=params)
