@@ -4,6 +4,7 @@ from api_requests import (
     get_movie_details,
     search_movie,
     get_movie_genres,
+    get_with_custom_key
 )
 
 # pozitív tesztek
@@ -49,3 +50,15 @@ def test_tc05_popular_movies_page_2():
     data = response.json()
     assert data["page"] == 2
     assert len(data["results"]) > 0
+
+def test_tc06_language_parameter():
+    """TC06: Magyar nyelvi paraméter"""
+    response = get_popular_movies(language="hu-HU")
+    assert response.status_code == 200
+
+# negatív tesztek
+
+def test_tc07_invalid_api_key():
+    """TC07: Hibás API kulcs"""
+    response = get_with_custom_key("movie/popular", api_key="INVALID_KEY")
+    assert response.status_code == 401
