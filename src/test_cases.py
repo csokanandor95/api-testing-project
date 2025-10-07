@@ -41,3 +41,11 @@ def test_tc04_get_genres():
     for genre in data["genres"]:
         assert "id" in genre
         assert "name" in genre
+
+def test_tc05_popular_movies_page_2():
+    """TC05: Népszerű filmek 2. oldal"""
+    response = get_popular_movies(page=2)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["page"] == 2
+    assert len(data["results"]) > 0

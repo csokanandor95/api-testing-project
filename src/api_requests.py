@@ -29,3 +29,10 @@ def get_movie_genres():
     url = f"{BASE_URL}/genre/movie/list"
     params = {"api_key": API_KEY}
     return requests.get(url, params=params)
+
+def get_with_custom_key(endpoint, api_key=None, **params):
+    """Egyedi API kulccsal való hívás (hibás kulcs teszteléshez)"""
+    url = f"{BASE_URL}/{endpoint}"
+    if api_key:
+        params["api_key"] = api_key
+    return requests.get(url, params=params)
