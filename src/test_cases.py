@@ -86,14 +86,32 @@ def test_tc11_search_long_query():
     response = search_movie(long_query)
     assert response.status_code == 200
 
-def test_tc12_invalid_page_zero():
-    """TC12: page=0 paraméter"""
-    response = get_popular_movies(page=0)
-    assert response.status_code == 400
-    
-def test_tc13_empty_search_query():
-    """TC13: Üres keresési string"""
+def test_tc12_empty_search_query():
+    """TC12: Üres keresési string"""
     response = search_movie("")
     assert response.status_code in [200]
     data = response.json()
     assert len(data["results"]) == 0
+
+# 2-pontos határérték-tesztek (BVA)
+# dokumentáció alapján: Min:1, Max:500
+
+def test_tc13_boundary_min_invalid():
+    """TC13: Alsó határ oldalszám-negatív"""
+    response = get_popular_movies(page=0)
+    assert response.status_code == 400
+
+def test_tc14_boundary_min_valid():
+    """TC14: Alsó határ oldalszám (page=1)"""
+    response = get_popular_movies(page=1)
+    assert response.status_code == 200
+
+def test_tc15_boundary_max_valid():
+    """TC15: Felső határ oldalszám (page=500)"""
+    response = get_popular_movies(page=500)
+    assert response.status_code == 200
+
+def test_tc16_boundary_max_invalid():
+    """TC16: Felső határ oldalszám-negatív (page=501)"""
+    response = get_popular_movies(page=501)
+    assert response.status_code == 400
