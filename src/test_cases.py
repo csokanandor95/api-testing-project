@@ -79,3 +79,21 @@ def test_tc10_search_nonsense_query():
     assert response.status_code == 200
     data = response.json()
     assert len(data["results"]) == 0
+
+def test_tc11_search_long_query():
+    """TC11: 300 karakteres keresési kifejezés"""
+    long_query = "a" * 300
+    response = search_movie(long_query)
+    assert response.status_code == 200
+
+def test_tc12_invalid_page_zero():
+    """TC12: page=0 paraméter"""
+    response = get_popular_movies(page=0)
+    assert response.status_code == 400
+    
+def test_tc13_empty_search_query():
+    """TC13: Üres keresési string"""
+    response = search_movie("")
+    assert response.status_code in [200]
+    data = response.json()
+    assert len(data["results"]) == 0
