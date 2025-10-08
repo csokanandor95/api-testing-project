@@ -116,3 +116,38 @@ def test_tc16_boundary_max_invalid():
     """TC16: Felső határ oldalszám-negatív (page=501)"""
     response = get_popular_movies(page=501)
     assert response.status_code == 400
+
+# nem-funkcionális tesztek
+
+def test_tc17_json_structure():
+    """TC17: JSON struktúra ellenőrzése"""
+    response = get_popular_movies()
+    data = response.json()
+    for movie in data["results"]:
+        assert "id" in movie
+        assert "title" in movie
+        assert isinstance(movie["id"], int)
+
+def test_tc18_response_time():
+    """TC18: Válaszidő < 2 másodperc"""
+    import time
+    start = time.time()
+    response = get_popular_movies()
+    elapsed = time.time() - start
+    assert response.status_code == 200
+    assert elapsed < 2.0
+
+def test_tc19_response_size():
+    """TC19: JSON válasz mérete < 1 MB"""
+    response = get_popular_movies()
+    size_mb = len(response.content) / (1024 * 1024)
+    assert size_mb < 1.0
+
+def test_tc20_data_types():
+    """TC20: Adattípus ellenőrzés"""
+    response = get_popular_movies()
+    data = response.json()
+    movie = data["results"][0]
+    assert isinstance(movie["id"], int)
+    assert isinstance(movie["title"], str)
+    assert isinstance(movie.get("release_date"), (str, type(None)))
