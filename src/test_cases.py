@@ -95,6 +95,7 @@ def test_tc12_empty_search_query():
 
 # 2-pontos határérték-tesztek (BVA)
 # dokumentáció alapján: Min:1, Max:500
+# 100% határérték lefedettség
 
 def test_tc13_boundary_min_invalid():
     """TC13: Alsó határ oldalszám-negatív"""
