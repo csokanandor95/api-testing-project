@@ -62,3 +62,20 @@ def test_tc07_invalid_api_key():
     """TC07: Hibás API kulcs"""
     response = get_with_custom_key("movie/popular", api_key="INVALID_KEY")
     assert response.status_code == 401
+
+def test_tc08_missing_api_key():
+    """TC08: Hiányzó API kulcs"""
+    response = get_with_custom_key("movie/popular")
+    assert response.status_code == 401
+
+def test_tc09_invalid_movie_id():
+    """TC09: Érvénytelen film ID (-1)"""
+    response = get_movie_details(-1)
+    assert response.status_code in [400, 404]
+
+def test_tc10_search_nonsense_query():
+    """TC10: Értelmetlen keresési kifejezés"""
+    response = search_movie("!!!@@@")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["results"]) == 0
