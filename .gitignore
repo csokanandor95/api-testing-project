@@ -179,4 +179,9 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
-src/reports/report.html
+
+# Ignore all files in reports folder
+src/reports/
+
+# But keep this placeholder file
+!src/reports/.gitkeep
