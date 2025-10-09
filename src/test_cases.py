@@ -7,6 +7,7 @@ from api_requests import (
     get_with_custom_key
 )
 
+# --funkcionális tesztek--
 # pozitív tesztek
 
 def test_tc01_popular_movies():
@@ -56,7 +57,8 @@ def test_tc06_language_parameter():
     response = get_popular_movies(language="hu-HU")
     assert response.status_code == 200
 
-# negatív tesztek
+# --negatív tesztek--
+# hitelesítési hibák
 
 def test_tc07_invalid_api_key():
     """TC07: Hibás API kulcs"""
@@ -68,6 +70,7 @@ def test_tc08_missing_api_key():
     response = get_with_custom_key("movie/popular")
     assert response.status_code == 401
 
+# érvénytelen bemenet validáció
 def test_tc09_invalid_movie_id():
     """TC09: Érvénytelen film ID (-1)"""
     response = get_movie_details(-1)
@@ -93,8 +96,8 @@ def test_tc12_empty_search_query():
     data = response.json()
     assert len(data["results"]) == 0
 
-# 2-pontos határérték-tesztek (BVA)
-# dokumentáció alapján: Min:1, Max:500
+# --2-pontos határérték-tesztek (BVA)--
+# dokumentáció alapján: Min:1, Max:500 oldalszám paraméter határok
 # 100% határérték lefedettség
 
 def test_tc13_boundary_min_invalid():
@@ -117,19 +120,11 @@ def test_tc16_boundary_max_invalid():
     response = get_popular_movies(page=501)
     assert response.status_code == 400
 
-# nem-funkcionális tesztek
+# --nem-funkcionális tesztek--
+# teljesítmény tesztek
 
-def test_tc17_json_structure():
-    """TC17: JSON struktúra ellenőrzése"""
-    response = get_popular_movies()
-    data = response.json()
-    for movie in data["results"]:
-        assert "id" in movie
-        assert "title" in movie
-        assert isinstance(movie["id"], int)
-
-def test_tc18_response_time():
-    """TC18: Válaszidő < 2 másodperc"""
+def test_tc17_response_time():
+    """TC17: Válaszidő < 2 másodperc"""
     import time
     start = time.time()
     response = get_popular_movies()
@@ -137,11 +132,22 @@ def test_tc18_response_time():
     assert response.status_code == 200
     assert elapsed < 2.0
 
-def test_tc19_response_size():
-    """TC19: JSON válasz mérete < 1 MB"""
+def test_tc18_response_size():
+    """TC18: JSON válasz mérete < 1 MB"""
     response = get_popular_movies()
     size_mb = len(response.content) / (1024 * 1024)
     assert size_mb < 1.0
+
+# adat-integritás tesztek
+
+def test_tc19_json_structure():
+    """TC19: JSON struktúra ellenőrzése"""
+    response = get_popular_movies()
+    data = response.json()
+    for movie in data["results"]:
+        assert "id" in movie
+        assert "title" in movie
+        assert isinstance(movie["id"], int)
 
 def test_tc20_data_types():
     """TC20: Adattípus ellenőrzés"""
