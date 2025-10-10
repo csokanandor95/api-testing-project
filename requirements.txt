@@ -2,3 +2,5 @@ requests
 pytest
 pytest-html
 python-dotenv
+pytest-json-report
+jinja2
