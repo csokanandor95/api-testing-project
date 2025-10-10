@@ -187,7 +187,7 @@ src/reports/
 !src/reports/.gitkeep
 
 # Ignore all files in dashboard folder
-src/dashboard
+dashboard/
 
 # But keep this placeholder file
-!src/dashboard/.gitkeep
+!dashboard/.gitkeep
