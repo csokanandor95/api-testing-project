@@ -1,0 +1,81 @@
+name: API Tests CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:  # Manuális futtatás engedélyezése
+
+jobs:
+  test:
+    name: Run API Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    # ========== KÓDBÁZIS CHECKOUT ==========
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+    
+    # ========== PYTHON KÖRNYEZET BEÁLLÍTÁSA ==========
+    - name: 🐍 Set up Python 3.13
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+        cache: 'pip'  # Gyorsabb futás (cache-eli a pip csomagokat)
+    
+    # ========== FÜGGŐSÉGEK TELEPÍTÉSE ==========
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    # ========== TESZTEK FUTTATÁSA ==========
+    - name: 🧪 Run API tests
+      env:
+        TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+      run: |
+        pytest test_cases.py -v --json-report --json-report-file=reports/report.json --html=reports/report.html --self-contained-html
+    
+    # ========== DASHBOARD GENERÁLÁS ==========
+    - name: 📊 Generate dashboard
+      if: always()  # Mindig fusson, még ha a tesztek elbuknak is
+      run: |
+        python report_generator.py
+    
+    # ========== RIPORTOK MENTÉSE ==========
+    - name: 📁 Upload test reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports-${{ github.run_number }}
+        path: |
+          reports/
+          dashboard/
+        retention-days: 30  # 30 napig tárolja
+    
+    # ========== TESZTEREDMÉNY ÖSSZEGZÉS ==========
+    - name: 📋 Test Summary
+      if: always()
+      run: |
+        echo "## 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f "reports/report.json" ]; then
+          PASSED=$(jq '.summary.passed // 0' reports/report.json)
+          FAILED=$(jq '.summary.failed // 0' reports/report.json)
+          TOTAL=$(jq '.summary.total // 0' reports/report.json)
+          DURATION=$(jq '.summary.duration // 0' reports/report.json)
+          
+          echo "✅ **Passed:** $PASSED" >> $GITHUB_STEP_SUMMARY
+          echo "❌ **Failed:** $FAILED" >> $GITHUB_STEP_SUMMARY
+          echo "📊 **Total:** $TOTAL" >> $GITHUB_STEP_SUMMARY
+          echo "⏱️ **Duration:** ${DURATION}s" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$FAILED" -eq 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "🎉 **All tests passed!**" >> $GITHUB_STEP_SUMMARY
+          fi
+        else
+          echo "⚠️ No test results found" >> $GITHUB_STEP_SUMMARY
+        fi
