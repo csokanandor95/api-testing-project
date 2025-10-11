@@ -30,16 +30,21 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
+    # ========== .ENV FÁJL LÉTREHOZÁSA ==========
+    - name: 🔑 Create .env file
+      run: |
+        echo "TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}" > src/.env
+    
     # ========== TESZTEK FUTTATÁSA ==========
     - name: 🧪 Run API tests
-      env:
-        TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+      working-directory: ./src
       run: |
         pytest test_cases.py -v --json-report --json-report-file=reports/report.json --html=reports/report.html --self-contained-html
     
     # ========== DASHBOARD GENERÁLÁS ==========
     - name: 📊 Generate dashboard
-      if: always()  # Mindig fusson, még ha a tesztek elbuknak is
+      if: always() # Mindig fusson, még ha a tesztek elbuknak is
+      working-directory: ./src
       run: |
         python report_generator.py
     
@@ -50,13 +55,14 @@ jobs:
       with:
         name: test-reports-${{ github.run_number }}
         path: |
-          reports/
-          dashboard/
-        retention-days: 30  # 30 napig tárolja
+          src/reports/
+          src/dashboard/
+        retention-days: 30 napig tárolja
     
     # ========== TESZTEREDMÉNY ÖSSZEGZÉS ==========
     - name: 📋 Test Summary
       if: always()
+      working-directory: ./src
       run: |
         echo "## 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
