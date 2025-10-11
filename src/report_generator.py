@@ -4,19 +4,20 @@ HTML dashboard generálás JSON riportból
 import json
 from datetime import datetime
 from jinja2 import Template
+import os
 
 def load_json_report(filepath):
     """JSON riport betöltése"""
     with open(filepath, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-def generate_dashboard(json_filepath, output_filepath):
+def generate_dashboard(json_filepath, output_filepath=None):
     """
     Dashboard generálás Jinja2 sablonnal
     
     Args:
         json_filepath: pytest JSON riport fájl útvonala
-        output_filepath: Kimeneti HTML fájl útvonala
+        output_filepath: Kimeneti HTML fájl útvonala (opcionális, automatikus timestamp)
     """
     # JSON betöltése
     report_data = load_json_report(json_filepath)
@@ -31,6 +32,12 @@ def generate_dashboard(json_filepath, output_filepath):
     total = summary.get('total', 0)
     duration = summary.get('duration', 0)
     
+    # Összes teszt futási idejének számítása
+    total_test_duration = sum(
+        test.get('call', {}).get('duration', 0) 
+        for test in tests
+    )
+    
     # Sikeres arány számítás
     success_rate = (passed / total * 100) if total > 0 else 0
     
@@ -43,6 +50,13 @@ def generate_dashboard(json_filepath, output_filepath):
             'duration': round(test.get('call', {}).get('duration', 0), 3),
             'error': test.get('call', {}).get('longrepr', '') if test.get('outcome') == 'failed' else ''
         })
+    
+    # Automatikus fájlnév időbélyeggel
+    if output_filepath is None:
+        timestamp_str = datetime.now().strftime('%Y%m%d_%H%M%S')
+        output_dir = 'dashboard'
+        os.makedirs(output_dir, exist_ok=True)
+        output_filepath = f'{output_dir}/dashboard_{timestamp_str}.html'
     
     # HTML sablon
     html_template = """
@@ -316,7 +330,7 @@ def generate_dashboard(json_filepath, output_filepath):
         passed=passed,
         failed=failed,
         skipped=skipped,
-        duration=round(duration, 2),
+        duration=round(total_test_duration, 2),
         success_rate=round(success_rate, 1),
         tests=test_details
     )
@@ -327,11 +341,12 @@ def generate_dashboard(json_filepath, output_filepath):
     
     print(f"✅ Dashboard sikeresen generálva: {output_filepath}")
     print(f"📊 Statisztika: {passed}/{total} sikeres teszt ({success_rate:.1f}%)")
+    print(f"⏱️  Összes futási idő: {round(total_test_duration, 2)}s")
 
 
 if __name__ == "__main__":
     # Használat példa
     generate_dashboard(
-        json_filepath='src/reports/report.json',
-        output_filepath='dashboard/dashboard.html'
+        json_filepath='src/reports/report.json'
+        # output_filepath automatikusan generálódik időbélyeggel
     )
