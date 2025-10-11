@@ -5,11 +5,33 @@ import json
 from datetime import datetime
 from jinja2 import Template
 import os
+import glob
 
 def load_json_report(filepath):
     """JSON riport betöltése"""
     with open(filepath, 'r', encoding='utf-8') as f:
         return json.load(f)
+
+def find_latest_json_report(reports_dir='reports'):
+    """
+    Megtalálja a legutolsó JSON riport fájlt a megadott mappában
+    
+    Args:
+        reports_dir: A reports mappa útvonala
+    
+    Returns:
+        A legutolsó JSON fájl útvonala, vagy None ha nincs
+    """
+    # Összes JSON fájl keresése
+    json_files = glob.glob(f'{reports_dir}/report*.json')
+    
+    if not json_files:
+        return None
+    
+    # Legutolsó fájl (módosítási idő alapján)
+    latest_file = max(json_files, key=os.path.getmtime)
+    return latest_file
+
 
 def generate_dashboard(json_filepath, output_filepath=None):
     """
@@ -345,8 +367,15 @@ def generate_dashboard(json_filepath, output_filepath=None):
 
 
 if __name__ == "__main__":
-    # Használat példa
-    generate_dashboard(
-        json_filepath='src/reports/report.json'
-        # output_filepath automatikusan generálódik időbélyeggel
-    )
+    # Automatikus JSON fájl keresés
+    json_file = find_latest_json_report('reports')
+    
+    if json_file:
+        print(f"📄 Legutolsó JSON riport: {json_file}")
+        generate_dashboard(
+            json_filepath=json_file
+            # output_filepath automatikusan generálódik időbélyeggel
+        )
+    else:
+        print("⚠️ Nem található JSON riport a reports/ mappában!")
+        print("   Futtasd először a teszteket: python run_tests.py")

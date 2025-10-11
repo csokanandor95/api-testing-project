@@ -35,6 +35,13 @@ jobs:
       run: |
         echo "TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}" > src/.env
     
+    # ========== MAPPÁK LÉTREHOZÁSA ==========
+    - name: 📁 Create reports directories
+      working-directory: ./src
+      run: |
+        mkdir -p reports
+        mkdir -p dashboard
+    
     # ========== TESZTEK FUTTATÁSA ==========
     - name: 🧪 Run API tests
       working-directory: ./src
@@ -57,7 +64,7 @@ jobs:
         path: |
           src/reports/
           src/dashboard/
-        retention-days: 30 napig tárolja
+        retention-days: 30 # 30 napig tárolja
     
     # ========== TESZTEREDMÉNY ÖSSZEGZÉS ==========
     - name: 📋 Test Summary
