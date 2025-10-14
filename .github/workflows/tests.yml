@@ -35,6 +35,11 @@ jobs:
       run: |
         echo "TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}" > src/.env
     
+    # ========== IDŐBÉLYEG GENERÁLÁS ==========
+    - name: ⏰ Generate timestamp
+      id: timestamp
+      run: echo "timestamp=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_OUTPUT
+    
     # ========== MAPPÁK LÉTREHOZÁSA ==========
     - name: 📁 Create reports directories
       working-directory: ./src
@@ -45,8 +50,14 @@ jobs:
     # ========== TESZTEK FUTTATÁSA ==========
     - name: 🧪 Run API tests
       working-directory: ./src
+      env:
+        TIMESTAMP: ${{ steps.timestamp.outputs.timestamp }}
       run: |
-        pytest test_cases.py -v --json-report --json-report-file=reports/report.json --html=reports/report.html --self-contained-html
+        pytest test_cases.py -v \
+          --json-report \
+          --json-report-file=reports/report_${TIMESTAMP}.json \
+          --html=reports/report_${TIMESTAMP}.html \
+          --self-contained-html
     
     # ========== DASHBOARD GENERÁLÁS ==========
     - name: 📊 Generate dashboard
