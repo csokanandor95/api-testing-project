@@ -66,9 +66,10 @@ def generate_dashboard(json_filepath, output_filepath=None):
     # Automatikus fájlnév időbélyeggel
     if output_filepath is None:
         timestamp_str = datetime.now().strftime('%Y%m%d_%H%M%S')
-        output_dir = 'dashboard'
+        output_dir = os.path.join(get_project_root(), 'dashboard')
         os.makedirs(output_dir, exist_ok=True)
-        output_filepath = f'{output_dir}/dashboard_{timestamp_str}.html'
+        output_filepath = os.path.join(output_dir, f'dashboard_{timestamp_str}.html')
+
     
     # HTML sablon
     html_template = """
