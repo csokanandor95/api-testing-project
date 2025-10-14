@@ -85,11 +85,14 @@ jobs:
         echo "## 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         
-        if [ -f "reports/report.json" ]; then
-          PASSED=$(jq '.summary.passed // 0' reports/report.json)
-          FAILED=$(jq '.summary.failed // 0' reports/report.json)
-          TOTAL=$(jq '.summary.total // 0' reports/report.json)
-          DURATION=$(jq '.summary.duration // 0' reports/report.json)
+        # Legutolsó JSON fájl keresése
+        JSON_FILE=$(ls -t reports/report_*.json 2>/dev/null | head -n1)
+        
+        if [ -f "$JSON_FILE" ]; then
+          PASSED=$(jq '.summary.passed // 0' "$JSON_FILE")
+          FAILED=$(jq '.summary.failed // 0' "$JSON_FILE")
+          TOTAL=$(jq '.summary.total // 0' "$JSON_FILE")
+          DURATION=$(jq '.summary.duration // 0' "$JSON_FILE")
           
           echo "✅ **Passed:** $PASSED" >> $GITHUB_STEP_SUMMARY
           echo "❌ **Failed:** $FAILED" >> $GITHUB_STEP_SUMMARY
