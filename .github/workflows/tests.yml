@@ -42,7 +42,6 @@ jobs:
     
     # ========== MAPPÁK LÉTREHOZÁSA ==========
     - name: 📁 Create reports directories
-      working-directory: ./src
       run: |
         mkdir -p reports
         mkdir -p dashboard
@@ -55,8 +54,8 @@ jobs:
       run: |
         pytest test_cases.py -v \
           --json-report \
-          --json-report-file=reports/report_${TIMESTAMP}.json \
-          --html=reports/report_${TIMESTAMP}.html \
+          --json-report-file=../reports/report_${TIMESTAMP}.json \
+          --html=../reports/report_${TIMESTAMP}.html \
           --self-contained-html
     
     # ========== DASHBOARD GENERÁLÁS ==========

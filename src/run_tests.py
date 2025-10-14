@@ -26,16 +26,16 @@ def run_tests_with_reports():
     
     print_header()
     
-    # Mappák létrehozása
-    os.makedirs('reports', exist_ok=True)
-    os.makedirs('dashboard', exist_ok=True)
+    # Mappák létrehozása (projekt gyökérben)
+    os.makedirs('../reports', exist_ok=True)
+    os.makedirs('../dashboard', exist_ok=True)
     
     # Időbélyeg a riportokhoz
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
-    # Fájlnevek
-    json_report = f'reports/report_{timestamp}.json'
-    html_report = f'reports/report_{timestamp}.html'
+    # Fájlnevek (relatív útvonal a projekt gyökérhez)
+    json_report = f'../reports/report_{timestamp}.json'
+    html_report = f'../reports/report_{timestamp}.html'
     
     print(f"📅 Futtatás időpontja: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"📁 JSON riport: {json_report}")

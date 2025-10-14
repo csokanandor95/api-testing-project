@@ -7,31 +7,11 @@ from jinja2 import Template
 import os
 import glob
 
+
 def load_json_report(filepath):
     """JSON riport betöltése"""
     with open(filepath, 'r', encoding='utf-8') as f:
         return json.load(f)
-
-def find_latest_json_report(reports_dir='reports'):
-    """
-    Megtalálja a legutolsó JSON riport fájlt a megadott mappában
-    
-    Args:
-        reports_dir: A reports mappa útvonala
-    
-    Returns:
-        A legutolsó JSON fájl útvonala, vagy None ha nincs
-    """
-    # Összes JSON fájl keresése
-    json_files = glob.glob(f'{reports_dir}/report*.json')
-    
-    if not json_files:
-        return None
-    
-    # Legutolsó fájl (módosítási idő alapján)
-    latest_file = max(json_files, key=os.path.getmtime)
-    return latest_file
-
 
 def generate_dashboard(json_filepath, output_filepath=None):
     """
@@ -352,7 +332,7 @@ def generate_dashboard(json_filepath, output_filepath=None):
         passed=passed,
         failed=failed,
         skipped=skipped,
-        duration=round(total_test_duration, 2),
+        duration=round(total_test_duration, 2),  # összes teszt futási ideje
         success_rate=round(success_rate, 1),
         tests=test_details
     )
@@ -364,6 +344,29 @@ def generate_dashboard(json_filepath, output_filepath=None):
     print(f"✅ Dashboard sikeresen generálva: {output_filepath}")
     print(f"📊 Statisztika: {passed}/{total} sikeres teszt ({success_rate:.1f}%)")
     print(f"⏱️  Összes futási idő: {round(total_test_duration, 2)}s")
+
+
+def find_latest_json_report(reports_dir='reports'):
+    """
+    Megtalálja a legutolsó JSON riport fájlt a megadott mappában
+    
+    Args:
+        reports_dir: A reports mappa útvonala
+    
+    Returns:
+        A legutolsó JSON fájl útvonala, vagy None ha nincs
+    """
+    import glob
+    
+    # Összes JSON fájl keresése
+    json_files = glob.glob(f'{reports_dir}/report*.json')
+    
+    if not json_files:
+        return None
+    
+    # Legutolsó fájl (módosítási idő alapján)
+    latest_file = max(json_files, key=os.path.getmtime)
+    return latest_file
 
 
 if __name__ == "__main__":
