@@ -6,6 +6,16 @@ from datetime import datetime
 from jinja2 import Template
 import os
 import glob
+from pathlib import Path
+
+
+def get_project_root():
+    """
+    Projekt gyökér mappájának meghatározása
+    (report_generator.py az src/ mappában van)
+    """
+    current_file = Path(__file__).resolve()  # src/report_generator.py
+    return current_file.parent.parent  # Vissza a projekt gyökérbe
 
 
 def load_json_report(filepath):
@@ -371,7 +381,7 @@ def find_latest_json_report(reports_dir='reports'):
 
 if __name__ == "__main__":
     # Automatikus JSON fájl keresés
-    json_file = find_latest_json_report('reports')
+    json_file = find_latest_json_report('../reports')
     
     if json_file:
         print(f"📄 Legutolsó JSON riport: {json_file}")
@@ -381,4 +391,4 @@ if __name__ == "__main__":
         )
     else:
         print("⚠️ Nem található JSON riport a reports/ mappában!")
-        print("   Futtasd először a teszteket: python run_tests.py")
+        print("   Futtasd először a teszteket: cd src && python run_tests.py")

@@ -42,7 +42,7 @@ def run_tests_with_reports():
     print(f"📁 HTML riport: {html_report}")
     print("\n" + "-"*60 + "\n")
     
-    # Pytest futtatás
+    # ========== PYTEST FUTTATÁS ==========
     print("🚀 Tesztek futtatása...\n")
     
     result = subprocess.run([
@@ -69,7 +69,7 @@ def run_tests_with_reports():
     try:
         generate_dashboard(
             json_filepath=json_report,
-            output_filepath=None  # Automatikus időbélyeges név
+            output_filepath=None  # Automatikus időbélyeges név, de ../dashboard/ mappába
         )
     except Exception as e:
         print(f"❌ HIBA a dashboard generálás során: {e}")
