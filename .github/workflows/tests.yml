@@ -72,8 +72,8 @@ jobs:
       with:
         name: test-reports-${{ github.run_number }}
         path: |
-          src/reports/
-          src/dashboard/
+          reports/
+          dashboard/
         retention-days: 30 # 30 napig tárolja
     
     # ========== TESZTEREDMÉNY ÖSSZEGZÉS ==========
