@@ -42,7 +42,7 @@ def run_tests_with_reports():
     print(f"📁 HTML riport: {html_report}")
     print("\n" + "-"*60 + "\n")
     
-    # ========== PYTEST FUTTATÁS ==========
+    # Pytest futtatás
     print("🚀 Tesztek futtatása...\n")
     
     result = subprocess.run([
