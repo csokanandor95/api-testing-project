@@ -181,13 +181,13 @@ cython_debug/
 .cursorindexingignore
 
 # Ignore all files in reports folder
-src/reports/
+reports/*
 
 # But keep this placeholder file
-!src/reports/.gitkeep
+!/reports/.gitkeep
 
 # Ignore all files in dashboard folder
-dashboard/
+dashboard/*
 
 # But keep this placeholder file
 !dashboard/.gitkeep

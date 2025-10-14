@@ -26,23 +26,23 @@ def run_tests_with_reports():
     
     print_header()
     
-    # Mappák létrehozása
-    os.makedirs('reports', exist_ok=True)
-    os.makedirs('dashboard', exist_ok=True)
+    # Mappák létrehozása (projekt gyökérben)
+    os.makedirs('../reports', exist_ok=True)
+    os.makedirs('../dashboard', exist_ok=True)
     
     # Időbélyeg a riportokhoz
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
-    # Fájlnevek
-    json_report = f'reports/report_{timestamp}.json'
-    html_report = f'reports/report_{timestamp}.html'
+    # Fájlnevek (relatív útvonal a projekt gyökérhez)
+    json_report = f'../reports/report_{timestamp}.json'
+    html_report = f'../reports/report_{timestamp}.html'
     
     print(f"📅 Futtatás időpontja: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"📁 JSON riport: {json_report}")
     print(f"📁 HTML riport: {html_report}")
     print("\n" + "-"*60 + "\n")
     
-    # Pytest futtatás
+    # ========== PYTEST FUTTATÁS ==========
     print("🚀 Tesztek futtatása...\n")
     
     result = subprocess.run([
@@ -69,7 +69,7 @@ def run_tests_with_reports():
     try:
         generate_dashboard(
             json_filepath=json_report,
-            output_filepath=None  # Automatikus időbélyeges név
+            output_filepath=None  # Automatikus időbélyeges név, de ../dashboard/ mappába
         )
     except Exception as e:
         print(f"❌ HIBA a dashboard generálás során: {e}")
@@ -81,7 +81,7 @@ def run_tests_with_reports():
     print("="*60)
     
     if result.returncode == 0:
-        print("\n✅ Minden teszt sikeresen lefutott!")
+        print("\n✅ Minden teszt sikeresen lefutott.")
     else:
         print("\n⚠️  Néhány teszt elbukott vagy hibaüzenet történt.")
     
@@ -90,7 +90,7 @@ def run_tests_with_reports():
     print(f"   • Egyedi dashboard: dashboard/dashboard_{timestamp}.html")
     print(f"   • JSON adat: {json_report}")
     
-    print("\n💡 TIP: Nyisd meg a riportokat böngészőben a részletes eredményekért!")
+    print("\nA részletes tesztriportok a böngészőben megtekinthetőek.")
     print("="*60 + "\n")
     
     return result.returncode
