@@ -2,7 +2,7 @@ name: API Tests CI/CD
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, folder_structure_test ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:  # Manuális futtatás engedélyezése
