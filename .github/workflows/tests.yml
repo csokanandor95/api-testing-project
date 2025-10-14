@@ -79,7 +79,7 @@ jobs:
     # ========== TESZTEREDMÉNY ÖSSZEGZÉS ==========
     - name: 📋 Test Summary
       if: always()
-      working-directory: ./reports
+      # working directory nem kell mert már a gyökérből megy
       run: |
         echo "## 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
