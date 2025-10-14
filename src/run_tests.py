@@ -81,7 +81,7 @@ def run_tests_with_reports():
     print("="*60)
     
     if result.returncode == 0:
-        print("\n✅ Minden teszt sikeresen lefutott!")
+        print("\n✅ Minden teszt sikeresen lefutott.")
     else:
         print("\n⚠️  Néhány teszt elbukott vagy hibaüzenet történt.")
     
@@ -90,7 +90,7 @@ def run_tests_with_reports():
     print(f"   • Egyedi dashboard: dashboard/dashboard_{timestamp}.html")
     print(f"   • JSON adat: {json_report}")
     
-    print("\n💡 TIP: Nyisd meg a riportokat böngészőben a részletes eredményekért!")
+    print("\nA részletes tesztriportok a böngészőben megtekinthetőek.")
     print("="*60 + "\n")
     
     return result.returncode
