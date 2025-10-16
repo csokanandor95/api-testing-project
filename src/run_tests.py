@@ -1,5 +1,19 @@
 """
 Automatizált API tesztfuttatás és riportálás
+Ez a script a központi orchestrator, ami "egy gombnyomásra" mindent elvégez:
+1. Létrehozza a szükséges mappákat
+2. Futtatja az összes pytest tesztet
+3. Generál JSON és HTML riportokat
+4. Elkészíti az egyedi dashboardot
+5. Részletes összefoglalót ad a konzolra
+
+Használat:
+    cd src
+    python run_tests.py
+
+A script exit code-dal tér vissza:
+- 0: minden teszt sikeres
+- 1: legalább egy teszt elbukott vagy hiba történt
 """
 import subprocess
 import os
@@ -42,7 +56,7 @@ def run_tests_with_reports():
     print(f"📁 HTML riport: {html_report}")
     print("\n" + "-"*60 + "\n")
     
-    # ========== PYTEST FUTTATÁS ==========
+    # Pytest futtatás
     print("🚀 Tesztek futtatása...\n")
     
     result = subprocess.run([
@@ -57,28 +71,32 @@ def run_tests_with_reports():
     
     print("\n" + "-"*60 + "\n")
     
-    # ========== EREDMÉNY ELLENŐRZÉS ==========
+    # Eredmény ellenőrzés - JSON létrejött-e
     if not os.path.exists(json_report):
         print("❌ HIBA: JSON riport nem jött létre!")
         print("   Ellenőrizd, hogy a pytest-json-report telepítve van.")
         return 1
     
-    # ========== DASHBOARD GENERÁLÁS ==========
+    # Dashboard generálás
     print("📊 Egyedi dashboard generálása...\n")
     
     try:
         generate_dashboard(
             json_filepath=json_report,
-            output_filepath=None  # Automatikus időbélyeges név, de ../dashboard/ mappába
+            output_filepath=None  # Automatikus időbélyeges név, ../dashboard/ mappába
         )
     except Exception as e:
         print(f"❌ HIBA a dashboard generálás során: {e}")
         return 1
     
-    # ========== ÖSSZEGZÉS ==========
+    # Összegzés
     print("\n" + "="*60)
     print("📋 TESZTFUTÁS BEFEJEZVE")
     print("="*60)
+
+    # A subprocess.run() returncode-ja jelzi a pytest eredményt
+    # 0 = minden teszt sikeres
+    # nem 0 = legalább egy teszt elbukott
     
     if result.returncode == 0:
         print("\n✅ Minden teszt sikeresen lefutott.")
@@ -95,6 +113,13 @@ def run_tests_with_reports():
     
     return result.returncode
 
+# main függvény
+# Ez fut le, amikor közvetlenül futtatjuk a scriptet
+
 if __name__ == "__main__":
+    # Meghívjuk a fő függvényt és kapunk egy exit code-ot
     exit_code = run_tests_with_reports()
+
+    # Kilépünk ezzel az exit code-dal
+    # Ezt a CI/CD rendszer (GitHub Actions) használja, hogy tudja, sikeres volt-e a teszt futás
     sys.exit(exit_code)

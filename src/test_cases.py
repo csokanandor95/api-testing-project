@@ -1,3 +1,18 @@
+"""
+TMDB API Teszt Suite
+
+Ez a fájl tartalmazza az összes API tesztet a TMDB (The Movie Database) API-hoz.
+
+Teszt Struktúra:
+- Funkcionális tesztek (TC01-TC06): Pozitív esetek, alap funkciók tesztelése
+- Negatív tesztek (TC07-TC12): Hibás bemenetek, hibaüzenetek validálása
+- Boundary Value Analysis (TC13-TC16): Határérték tesztelés (page paraméter-re)
+- Nem-funkcionális tesztek (TC17-TC20): Teljesítmény és adat-integritás
+
+Összesen: 20 teszt eset
+Lefedettség: Funkcionális, negatív, határérték, teljesítmény, adat-validáció
+"""
+
 import pytest
 from api_requests import (
     get_popular_movies,

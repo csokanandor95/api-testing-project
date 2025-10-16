@@ -1,3 +1,17 @@
+# GitHub Actions CI/CD Workflow
+
+# Automatikusan futtatja a teszteket minden push, pull vagy manuális futtatás esetén
+
+# Működés:
+# 1. Letölti a kódot a repo-ból
+# 2. Beállítja a Python környezetet
+# 3. Telepíti a függőségeket
+# 4. Létrehozza a .env fájlt (API kulccsal)
+# 5. Futtatja a teszteket
+# 6. Generálja a riportokat
+# 7. Elmenti az artifactokat (letölthetők a GitHub-ról)
+# 8. Összefoglalót készít
+
 name: API Tests CI/CD
 
 on:
@@ -10,43 +24,43 @@ on:
 jobs:
   test:
     name: Run API Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Virtuális gép típusa (legújabb Ubuntu Linux)
     
     steps:
-    # ========== KÓDBÁZIS CHECKOUT ==========
+    # 1. lépés: Kódbázis letöltése (checkout)
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
     
-    # ========== PYTHON KÖRNYEZET BEÁLLÍTÁSA ==========
+    # 2. lépés: Python környezet beállítása
     - name: 🐍 Set up Python 3.13
       uses: actions/setup-python@v5
       with:
         python-version: '3.13'
         cache: 'pip'  # Gyorsabb futás (cache-eli a pip csomagokat)
     
-    # ========== FÜGGŐSÉGEK TELEPÍTÉSE ==========
+    # 3. lépés: Függőségek telepítése
     - name: 📦 Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
-    # ========== .ENV FÁJL LÉTREHOZÁSA ==========
+    # 4. lépés: .env fájl létrehozása
     - name: 🔑 Create .env file
       run: |
         echo "TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}" > src/.env
     
-    # ========== IDŐBÉLYEG GENERÁLÁS ==========
+    # 5. lépés: Időbélyeg generálás
     - name: ⏰ Generate timestamp
       id: timestamp
       run: echo "timestamp=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_OUTPUT
     
-    # ========== MAPPÁK LÉTREHOZÁSA ==========
+    # 6. lépés: Riport mappák létrehozása
     - name: 📁 Create reports directories
       run: |
         mkdir -p reports
         mkdir -p dashboard
     
-    # ========== TESZTEK FUTTATÁSA ==========
+    # 7. lépés: Tesztek futtatása
     - name: 🧪 Run API tests
       working-directory: ./src
       env:
@@ -58,14 +72,14 @@ jobs:
           --html=../reports/report_${TIMESTAMP}.html \
           --self-contained-html
     
-    # ========== DASHBOARD GENERÁLÁS ==========
+    # 8. lépés: Dashboard generálás
     - name: 📊 Generate dashboard
       if: always() # Mindig fusson, még ha a tesztek elbuknak is
       working-directory: ./src
       run: |
         python report_generator.py
     
-    # ========== RIPORTOK MENTÉSE ==========
+    # 9. lépés: Riportok feltöltése (artifacts)
     - name: 📁 Upload test reports
       if: always()
       uses: actions/upload-artifact@v4
@@ -76,7 +90,7 @@ jobs:
           dashboard/
         retention-days: 30 # 30 napig tárolja
     
-    # ========== TESZTEREDMÉNY ÖSSZEGZÉS ==========
+    # 10. lépés: Teszteredmény összegzés
     - name: 📋 Test Summary
       if: always()
       # working directory nem kell mert már a gyökérből megy

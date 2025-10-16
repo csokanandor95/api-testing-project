@@ -1,5 +1,20 @@
 """
 HTML dashboard generálás JSON riportból
+
+Ez a modul felelős a pytest által készített JSON riportból
+egy vizuálisan szép, interaktív HTML dashboard létrehozásáért.
+
+A dashboard tartalmazza:
+- Statisztikai összefoglaló (sikeres/sikertelen/kihagyott tesztek)
+- Sikességi arány és progress bar
+- Részletes teszt eredmények (futási idő, hibaüzenetek)
+- Responsive design modern CSS-sel
+
+Fő komponensek:
+- JSON riport beolvasás
+- Statisztikák számítása
+- Jinja2 template
+- HTML fájl generálás timestampel
 """
 import json
 from datetime import datetime
@@ -12,7 +27,8 @@ from pathlib import Path
 def get_project_root():
     """
     Projekt gyökér mappájának meghatározása
-    (report_generator.py az src/ mappában van)
+    (report_generator.py az src/ mappában van),
+    de a dashboard mindig a megfelelő helyre kerül (dashboard/ mappa a projekt gyökérben.
     """
     current_file = Path(__file__).resolve()  # src/report_generator.py
     return current_file.parent.parent  # Vissza a projekt gyökérbe
@@ -360,6 +376,11 @@ def generate_dashboard(json_filepath, output_filepath=None):
 def find_latest_json_report(reports_dir='reports'):
     """
     Megtalálja a legutolsó JSON riport fájlt a megadott mappában
+
+    Működés:
+    1. Megkeresi az összes report*.json fájlt a mappában
+    2. Megnézi a módosítási időt (os.path.getmtime)
+    3. Visszaadja a legfrissebbel módosítottat
     
     Args:
         reports_dir: A reports mappa útvonala
@@ -379,7 +400,7 @@ def find_latest_json_report(reports_dir='reports'):
     latest_file = max(json_files, key=os.path.getmtime)
     return latest_file
 
-
+# fő program, ha közvetlenül futtajuk
 if __name__ == "__main__":
     # Automatikus JSON fájl keresés
     json_file = find_latest_json_report('../reports')

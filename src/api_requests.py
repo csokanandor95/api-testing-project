@@ -1,9 +1,16 @@
-import requests
+"""
+API requests modul
+
+Ez a modul tartalmazza az összes TMDB API-hoz kapcsolódó HTTP kérés függvényt.
+Célja, hogy leegyszerűsítse az API hívásokat a tesztek számára.
+"""
+
+import requests # HTTP kérések küldésére
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv # környezeti változók (.env fájl) betöltésére
 
 load_dotenv()
-API_KEY = os.getenv("TMDB_API_KEY")
+API_KEY = os.getenv("TMDB_API_KEY") # API kulcs beolvasása a környezeti változókból
 BASE_URL = "https://api.themoviedb.org/3"
 
 def get_popular_movies(page=1, language="en-US"):
