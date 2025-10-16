@@ -105,12 +105,10 @@ jobs:
           PASSED=$(jq '.summary.passed // 0' "$JSON_FILE")
           FAILED=$(jq '.summary.failed // 0' "$JSON_FILE")
           TOTAL=$(jq '.summary.total // 0' "$JSON_FILE")
-          DURATION=$(jq '.summary.duration // 0' "$JSON_FILE")
           
           echo "✅ **Passed:** $PASSED" >> $GITHUB_STEP_SUMMARY
           echo "❌ **Failed:** $FAILED" >> $GITHUB_STEP_SUMMARY
           echo "📊 **Total:** $TOTAL" >> $GITHUB_STEP_SUMMARY
-          echo "⏱️ **Duration:** ${DURATION}s" >> $GITHUB_STEP_SUMMARY
           
           if [ "$FAILED" -eq 0 ]; then
             echo "" >> $GITHUB_STEP_SUMMARY

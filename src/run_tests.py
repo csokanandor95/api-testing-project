@@ -1,5 +1,6 @@
 """
 Automatizált API tesztfuttatás és riportálás
+
 Ez a script a központi orchestrator, ami "egy gombnyomásra" mindent elvégez:
 1. Létrehozza a szükséges mappákat
 2. Futtatja az összes pytest tesztet
