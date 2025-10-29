@@ -95,7 +95,7 @@ jobs:
       if: always()
       # working directory nem kell mert már a gyökérből megy
       run: |
-        echo "## 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "##Test Results" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         
         # Legutolsó JSON fájl keresése
@@ -112,7 +112,7 @@ jobs:
           
           if [ "$FAILED" -eq 0 ]; then
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "🎉 **All tests passed!**" >> $GITHUB_STEP_SUMMARY
+            echo "**All tests passed!**" >> $GITHUB_STEP_SUMMARY
           fi
         else
           echo "⚠️ No test results found" >> $GITHUB_STEP_SUMMARY

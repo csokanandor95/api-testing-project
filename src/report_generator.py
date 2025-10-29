@@ -284,7 +284,7 @@ def generate_dashboard(json_filepath, output_filepath=None):
     <body>
         <div class="container">
             <div class="header">
-                <h1>🧪 API Test Dashboard</h1>
+                <h1>API Test Dashboard</h1>
                 <p>TMDB API Automatizált Tesztelés</p>
                 <p style="font-size: 0.9em; margin-top: 10px;">Generálva: {{ timestamp }}</p>
             </div>
