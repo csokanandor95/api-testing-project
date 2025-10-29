@@ -95,7 +95,7 @@ jobs:
       if: always()
       # working directory nem kell mert már a gyökérből megy
       run: |
-        echo "##Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "**Test Results**" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         
         # Legutolsó JSON fájl keresése
